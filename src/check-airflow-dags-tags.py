@@ -61,7 +61,7 @@ for dag_file in dag_files:
  
     emr_tags_found = emr_tags_found or bool(emr_tags and any(emr_tags))
     tags_found = tags_found or bool(tags and any(tags))
-    sec_conf_found = sec_conf_found or bool(found_sec_conf) if found_sec_conf is not None else False
+    sec_conf_found = sec_conf_found or (found_sec_conf is not None and found_sec_conf != '')
  
 if not dag_files:
     print("::error::No DAG files found in the specified directory.")
