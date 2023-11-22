@@ -15,6 +15,6 @@ runs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       shell: bash      
     - name: Run script      
-      run: python check-airflow-dags-tags.py
+      run: python src/check-airflow-dags-tags.py
       shell: bash
       
