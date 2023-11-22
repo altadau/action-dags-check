@@ -1,6 +1,11 @@
 name: 'Check Tags in Airflow DAG'
 description: 'Check Tags in Airflow DAG in GitHub repo'
 
+inputs:
+  context:
+    description: 'working directory'
+    default: '.'
+
 author: 'Dauren Altayev'
 
 runs:
@@ -14,7 +19,9 @@ runs:
       run: |
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       shell: bash      
-    - name: Run script      
+    - name: Run script
+      with:
+        context: '${{ inputs.context }}'
       run: python src/check-airflow-dags-tags.py
       shell: bash
       
