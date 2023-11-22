@@ -15,6 +15,8 @@ runs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       shell: bash      
     - name: Run script
-      run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py
+      run: |
+        python ${{ github.action_path }}/src/check-airflow-dags-tags.py >> $GITHUB_OUTPUT
+        echo $GITHUB_OUTPUT
       shell: bash
       
