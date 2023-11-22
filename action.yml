@@ -16,4 +16,5 @@ runs:
       shell: bash      
     - name: Run script      
       run: python check-airflow-dags-tags.py
+      shell: bash
       
