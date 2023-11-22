@@ -45,7 +45,6 @@ def find_sec_conf_in_file(file_path):
 dag_directory = "orchestration/dags"
 dag_files = find_dag_files(dag_directory)
  
-# Флаги для отслеживания состояния
 emr_tags_found = False
 tags_found = False
 sec_conf_found = False
@@ -60,12 +59,10 @@ for dag_file in dag_files:
  
     found_sec_conf = find_sec_conf_in_file(dag_file)
  
-    # Обновляем флаги
     emr_tags_found = emr_tags_found or bool(emr_tags and any(emr_tags))
     tags_found = tags_found or bool(tags and any(tags))
     sec_conf_found = sec_conf_found or bool(found_sec_conf)
  
-# Проверяем флаги и завершаем выполнение с ошибкой, если не найдены соответствующие элементы
 if not dag_files:
     print("::error::No DAG files found in the specified directory.")
     exit(1)
