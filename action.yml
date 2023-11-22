@@ -9,7 +9,7 @@ inputs:
   emr_tags:
     description: 'List of required EMR Tags'
     required: true
-    default: 'ssmmanaged:no see CSRC_DBC_933_EC2_SSM_MANAGED,CSRC_DBC_933:CSRC_DBC_933_EC2_SSM_MANAGED'
+    default: '{"ssmmanaged":"no see CSRC_DBC_933_EC2_SSM_MANAGED","CSRC_DBC_933":"CSRC_DBC_933_EC2_SSM_MANAGED"}'
       
 author: 'Dauren Altayev'
 
@@ -27,7 +27,7 @@ runs:
     - name: Pass Inputs to Shell
       run: |
         echo "DIRECTORY=${{ inputs.directory }}" >> $GITHUB_ENV
-        echo "EMR_TAGS=${{ inputs.emr_tags }}" >> $GITHUB_ENV
+        echo "EMR_TAGS=${{ toJson(inputs.emr_tags) }}" >> $GITHUB_ENV
       shell: bash            
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        

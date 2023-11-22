@@ -43,7 +43,9 @@ def find_sec_conf_in_file(file_path):
             return None
  
 directory = os.environ.get('DIRECTORY', 'orchestration/dags')
-emr_tags = os.environ.get('EMR_TAGS', '')
+emr_tags_str = os.environ.get('EMR_TAGS', '')
+ 
+emr_tags = json.loads(emr_tags_str)
  
 dag_files = find_dag_files(directory)
  
