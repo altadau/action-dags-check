@@ -42,10 +42,12 @@ def find_sec_conf_in_file(file_path):
             print("SecurityConfiguration not found in the file.")
             return None
  
-dag_directory = os.environ.get('DIRECTORY', 'orchestration/dags')
+dag_directory = os.environ.get('DIRECTORY', '')
 emr_tags_str = os.environ.get('EMR_TAGS', '')
 emr_tags = emr_tags_str.split() if emr_tags_str else []
- 
+
+dag_files = find_dag_files(dag_directory)
+
 empty_value_found = False
  
 if not dag_files:
