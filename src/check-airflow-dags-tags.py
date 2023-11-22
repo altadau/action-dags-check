@@ -51,3 +51,10 @@ for dag_file in dag_files:
     tags = find_tags_in_file(dag_file)
     print(f"Tags in {dag_file}: {tags}")
     find_sec_conf_in_file(dag_file)
+
+if not find_emr_tags_in_file:     
+    print("No EMR Tags found in any of the Airflow DAG files.")
+if not find_tags_in_file:     
+    print("No Airflow Tags found in any of the Airflow DAG files.")    
+if not find_sec_conf_in_file:     
+    print("SecurityConfiguration not found in any of the Airflow DAG files.")    
