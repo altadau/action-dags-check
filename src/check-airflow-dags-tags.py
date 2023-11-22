@@ -63,6 +63,6 @@ if not dag_files:
     print("::error::No DAG files found in the specified directory.")
     exit(1)
  
-if any(value[1] for value in found_values if not value[0]):
+if any(value[1] and not value[0] for value in found_values):
     print("::error::At least one empty value found in Airflow DAG files.")
     exit(1)
