@@ -57,7 +57,7 @@ for dag_file in dag_files:
  
     found_sec_conf, is_sec_conf_empty = find_sec_conf_in_file(dag_file)
  
-    found_values.append((emr_tags, bool(emr_tags)), (tags, bool(tags)), (found_sec_conf, is_sec_conf_empty))
+    found_values.extend([(emr_tags, bool(emr_tags)), (tags, bool(tags)), (found_sec_conf, is_sec_conf_empty)])
  
 if not dag_files:
     print("::error::No DAG files found in the specified directory.")
