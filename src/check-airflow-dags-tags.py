@@ -37,7 +37,7 @@ def find_sec_conf_in_file(file_path):
         if match:
             security_config_value = match.group(1).strip().strip('\'"')
             print(f"SecurityConfiguration: {security_config_value}")
-            return security_config_value  # Возвращаем значение, чтобы проверить, пусто ли поле
+            return security_config_value
         else:
             print("SecurityConfiguration not found in the file.")
             return None
@@ -61,7 +61,7 @@ for dag_file in dag_files:
  
     emr_tags_found = emr_tags_found or bool(emr_tags and any(emr_tags))
     tags_found = tags_found or bool(tags and any(tags))
-    sec_conf_found = sec_conf_found or bool(found_sec_conf)
+    sec_conf_found = sec_conf_found or bool(found_sec_conf) if found_sec_conf is not None else False
  
 if not dag_files:
     print("::error::No DAG files found in the specified directory.")
