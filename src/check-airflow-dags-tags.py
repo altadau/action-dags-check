@@ -61,7 +61,7 @@ for dag_file in dag_files:
  
     found_sec_conf = find_sec_conf_in_file(dag_file)
  
-    if not emr_tags or not tags or not found_sec_conf:
+    if (not emr_tags or not any(emr_tags)) or (not tags or not any(tags)) or not found_sec_conf:
         empty_value_found = True
         break
  
