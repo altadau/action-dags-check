@@ -37,15 +37,14 @@ def find_sec_conf_in_file(file_path):
         if match:
             security_config_value = match.group(1).strip().strip('\'"')
             print(f"SecurityConfiguration: {security_config_value}")
-            return security_config_value  # Возвращаем значение, чтобы проверить, пусто ли поле
+            return security_config_value, bool(security_config_value)
         else:
             print("SecurityConfiguration not found in the file.")
-            return None
+            return None, False
  
 dag_directory = "orchestration/dags"
 dag_files = find_dag_files(dag_directory)
  
-# Список для отслеживания найденных значений
 found_values = []
  
 for dag_file in dag_files:
@@ -56,14 +55,14 @@ for dag_file in dag_files:
     tags = find_tags_in_file(dag_file)
     print(f"Tags in {dag_file}: {tags}")
  
-    found_sec_conf = find_sec_conf_in_file(dag_file)
+    found_sec_conf, is_sec_conf_empty = find_sec_conf_in_file(dag_file)
  
-    found_values.extend(filter(None, [emr_tags, tags, found_sec_conf]))
+    found_values.append((emr_tags, bool(emr_tags)), (tags, bool(tags)), (found_sec_conf, is_sec_conf_empty))
  
 if not dag_files:
     print("::error::No DAG files found in the specified directory.")
     exit(1)
  
-if not any(found_values):
+if not any(value[1] for value in found_values):
     print("::error::No non-empty values found in any of the Airflow DAG files.")
     exit(1)
