@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import argparse
  
 def find_dag_files(directory):
     dag_files = []
@@ -42,15 +43,20 @@ def find_sec_conf_in_file(file_path):
             print("SecurityConfiguration not found in the file.")
             return None
  
-dag_directory = "orchestration/dags"
+parser = argparse.ArgumentParser(description='Check Airflow DAG files for empty values.')
+parser.add_argument('--directory', required=True, help='Path to the directory containing DAG files')
+parser.add_argument('--emr_tags', nargs='+', help='List of EMR Tags to check for')
+ 
+args = parser.parse_args()
+ 
+dag_directory = args.directory
 dag_files = find_dag_files(dag_directory)
  
 empty_value_found = False
  
 if not dag_files:
-    print("::error::No DAG files found in the specified directory.")
-    exit(1)
- 
+    print(f"::error::No DAG files found in the specified directory: {dag_directory}")
+     
 for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)
     formatted_emr_tags = json.dumps(emr_tags, indent=2, ensure_ascii=False)

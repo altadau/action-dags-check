@@ -1,6 +1,24 @@
 name: 'Check Tags in Airflow DAG'
 description: 'Check Tags in Airflow DAG in GitHub repo'
 
+inputs:
+  directory:
+    description: 'Specify path to Airflow DAG directory'
+    required: true
+    default: "orchestration/dags"
+  emr_tags:
+    description: 'List of required EMR Tags'
+    required: true
+    default: |
+      { 
+        "Key": "ssmmanaged",
+        "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"
+      },
+      {
+        "Key": "CSRC_DBC_933",
+        "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"
+      }
+
 author: 'Dauren Altayev'
 
 runs:
@@ -13,7 +31,12 @@ runs:
     - name: Install Dependencies     
       run: |
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      shell: bash      
+      shell: bash
+    - name: Pass Inputs to Shell
+      run: |
+              echo "INPUT_NUM=${{ inputs.directory }}" >> $GITHUB_ENV
+              echo "INPUT_NUM=${{ inputs.emr_tags }}" >> $GITHUB_ENV
+      shell: bash            
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        
       shell: bash
