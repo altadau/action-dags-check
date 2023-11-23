@@ -34,6 +34,9 @@ emr_tags_not_found = []
 if not dag_files:
     print(f"::error::No DAG files found in the specified directory: {directory}")
  
+with open('airflowemrtags.txt', 'w') as airflow_emr_tags_file:
+    json.dump([], airflow_emr_tags_file, indent=2)
+ 
 for dag_file in dag_files:
     emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags_str_in_file)
