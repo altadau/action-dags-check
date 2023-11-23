@@ -16,7 +16,7 @@ def find_emr_tags_in_file(file_path):
         content = file.read()
         tags_pattern = re.compile(r'["\'](?:Tags|tags)["\']\s*:\s*\[([^]]*)\]', re.MULTILINE)
         matches = tags_pattern.findall(content)
-        return matches
+        return json.loads(f"[{matches[0]}]") if matches else []
  
 with open('inputsemrtags.txt', 'r') as file:
     input_emr_tags_str = file.read()
@@ -40,14 +40,9 @@ with open('airflowemrtags.txt', 'w') as airflow_emr_tags_file:
     json.dump([], airflow_emr_tags_file, indent=2)
  
 for dag_file in dag_files:
-    emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
-    combined_tags_str = ''.join(emr_tags_str_in_file)
-    combined_tags_str = combined_tags_str.replace("'", "\"")
-    print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")
-    emr_tags_in_file = combined_tags_str if combined_tags_str else []
-    print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")
-    formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
-    print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
+    emr_tags_in_file = find_emr_tags_in_file(dag_file)
+    print(f"EMR Tags in {dag_file} (raw): {emr_tags_in_file}")
+    print(f"EMR Tags in {dag_file}: {json.dumps(emr_tags_in_file, indent=2)}")
  
     if input_emr_tags and any(tag not in emr_tags_in_file for tag in input_emr_tags):
         emr_tags_not_found.extend(tag for tag in input_emr_tags if tag not in emr_tags_in_file)
