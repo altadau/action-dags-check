@@ -30,4 +30,3 @@ runs:
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        
       shell: bash
-
