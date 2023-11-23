@@ -45,8 +45,6 @@ def find_sec_conf_in_file(file_path):
 directory = os.environ.get('DIRECTORY', '')
 emr_tags_str = os.environ.get('EMR_TAGS', '')
  
-emr_tags = json.loads(emr_tags_str)
- 
 dag_files = find_dag_files(directory)
  
 empty_value_found = False
@@ -59,13 +57,9 @@ for dag_file in dag_files:
     emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags_str_in_file)
     combined_tags_str = combined_tags_str.replace("'", "\"")
-    print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")
-    try:
-        emr_tags_in_file = json.loads(combined_tags_str) if combined_tags_str else []
-    except json.decoder.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-        emr_tags_in_file = [] 
-    print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")    
+    print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")    
+    emr_tags_in_file = combined_tags_str if combined_tags_str else []
+    print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")
     formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
  
@@ -78,8 +72,7 @@ for dag_file in dag_files:
         empty_value_found = True
         break
  
-
-    for emr_tag in emr_tags:
+    for emr_tag in json.loads(emr_tags_str):
         if emr_tag not in emr_tags_in_file:
             emr_tags_not_found.append(emr_tag)
  
