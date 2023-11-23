@@ -57,7 +57,7 @@ if not dag_files:
  
 for dag_file in dag_files:
     emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
-    emr_tags_in_file = json.loads(emr_tags_str_in_file)
+    emr_tags_in_file = json.loads(emr_tags_str_in_file[0]) if emr_tags_str_in_file else []
     formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
  
