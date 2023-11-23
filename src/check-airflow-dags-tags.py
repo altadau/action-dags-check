@@ -50,6 +50,7 @@ emr_tags = json.loads(emr_tags_str)
 dag_files = find_dag_files(directory)
  
 empty_value_found = False
+emr_tags_not_found = []
  
 if not dag_files:
     print(f"::error::No DAG files found in the specified directory: {directory}")
@@ -68,6 +69,16 @@ for dag_file in dag_files:
         empty_value_found = True
         break
  
-if empty_value_found:
-    print("::error::At least one empty value found in Airflow DAG files.")
+
+    for emr_tag in emr_tags:
+        if emr_tag not in emr_tags_in_file:
+            emr_tags_not_found.append(emr_tag)
+ 
+if empty_value_found or emr_tags_not_found:
+    if empty_value_found:
+        print("::error::At least one empty value found in Airflow DAG files.")
+ 
+    if emr_tags_not_found:
+        print(f"::error::EMR Tags not found in Airflow DAG files: {emr_tags_not_found}")
+ 
     exit(1)

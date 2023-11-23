@@ -9,7 +9,9 @@ inputs:
   emr_tags:
     description: 'List of required EMR Tags'
     required: true
-    default: '[{"key": "ssmmanaged", "value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"}, {"key": "CSRC_DBC_933", "value": "CSRC_DBC_933_EC2_SSM_MANAGED"}]'
+    default: |
+      '[{"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
+        {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}]'
       
 author: 'Dauren Altayev'
 
