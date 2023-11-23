@@ -29,13 +29,8 @@ runs:
     - name: Pass Inputs to Shell
       run: |
         echo "DIRECTORY=${{ inputs.directory }}" >> $GITHUB_ENV
-        echo 'export EMR_TAGS='$(echo ${{ inputs.emr_tags }}) > inputsemrtags.txt
-      shell: bash
-    - name: Run jq-action
-      uses: sergeysova/jq-action@v2
-      with:
-        args: '. > inputsemrtags.txt'
-        emr_tags: ${{ inputs.emr_tags }}
+        echo "${{ inputs.emr_tags }}" | jq . >> inputsemrtags.txt
+      shell: bash    
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        
       shell: bash
