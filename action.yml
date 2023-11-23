@@ -29,7 +29,7 @@ runs:
     - name: Pass Inputs to Shell
       run: |
         echo "DIRECTORY=${{ inputs.directory }}" >> $GITHUB_ENV
-        echo "EMR_TAGS=${{ toJson(inputs.emr_tags) }}" >> $GITHUB_ENV
+        echo "EMR_TAGS=${{ inputs.emr_tags }}" >> $GITHUB_ENV
       shell: bash            
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        
