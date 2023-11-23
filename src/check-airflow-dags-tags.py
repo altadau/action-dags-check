@@ -16,7 +16,7 @@ def find_emr_tags_in_file(file_path):
         content = file.read()
         tags_pattern = re.compile(r'["\'](?:Tags|tags)["\']\s*:\s*\[([^]]*)\]', re.MULTILINE)
         matches = tags_pattern.findall(content)
-        return json.loads(f"[{matches[0]}]") if matches else []
+        return json.loads(matches[0]) if matches else []
  
 with open('inputsemrtags.txt', 'r') as file:
     input_emr_tags_str = file.read()
