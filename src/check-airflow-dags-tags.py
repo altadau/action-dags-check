@@ -43,7 +43,7 @@ def find_sec_conf_in_file(file_path):
             return None
  
 directory = os.environ.get('DIRECTORY', '')
-emr_tags_str = os.environ.get('EMR_TAGS', '')
+emr_tags_str = os.environ.get('EMR_TAGS', '').replace("EMR_TAGS content:", "")
 print(f"EMR_TAGS content: {emr_tags_str}")
 emr_tags = json.loads(emr_tags_str) if emr_tags_str else []
  
