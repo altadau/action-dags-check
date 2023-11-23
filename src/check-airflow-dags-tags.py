@@ -17,66 +17,50 @@ def find_emr_tags_in_file(file_path):
         matches = tags_pattern.findall(content)
         return matches
  
-def find_tags_in_file(file_path):
-    with open(file_path, 'r') as file:
-        content = file.read()
-        tags_pattern = re.compile(r'tags\s*=\s*\[([^\]]*)\]', re.IGNORECASE)
-        matches = tags_pattern.findall(content)
-        if not matches:
-            tags_pattern = re.compile(r'tags\s*=\s*\(([^\)]*)\)', re.IGNORECASE)
-            matches = tags_pattern.findall(content)
-        return matches
+with open('inputsemrtags.txt', 'r') as file:
+    input_emr_tags_str = file.read()
  
-def find_sec_conf_in_file(file_path):
-    with open(file_path, 'r') as file:
-        content = file.read()
- 
-        security_config_pattern = re.compile(r'"SecurityConfiguration"\s*:\s*([^\n,]*)')
-        match = security_config_pattern.search(content)
- 
-        if match:
-            security_config_value = match.group(1).strip().strip('\'"')
-            print(f"SecurityConfiguration: {security_config_value}")
-            return security_config_value
-        else:
-            print("SecurityConfiguration not found in the file.")
-            return None
+try:
+    input_emr_tags = json.loads(input_emr_tags_str)
+except json.decoder.JSONDecodeError as e:
+    print(f"Error decoding JSON from inputsemrtags.txt: {e}")
+    input_emr_tags = []
  
 directory = os.environ.get('DIRECTORY', '')
-emr_tags_str = os.environ.get('EMR_TAGS', '').replace("EMR_TAGS content:", "")
-print(f"EMR_TAGS content: {emr_tags_str}")
-emr_tags = json.loads(emr_tags_str) if emr_tags_str else []
- 
 dag_files = find_dag_files(directory)
- 
 empty_value_found = False
 emr_tags_not_found = []
  
 if not dag_files:
     print(f"::error::No DAG files found in the specified directory: {directory}")
  
-for dag_file in dag_files:      
+for dag_file in dag_files:
     emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags_str_in_file)
     combined_tags_str = combined_tags_str.replace("'", "\"")
     print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")
-    emr_tags_in_file = json.loads(combined_tags_str) if combined_tags_str else []
+    emr_tags_in_file = combined_tags_str if combined_tags_str else []
     print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")
     formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
  
-    tags = find_tags_in_file(dag_file)
-    print(f"Tags in {dag_file}: {tags}")
+    if input_emr_tags and set(input_emr_tags).difference(emr_tags_in_file):
+        emr_tags_not_found.extend(set(input_emr_tags).difference(emr_tags_in_file))
  
-    found_sec_conf = find_sec_conf_in_file(dag_file)
+with open('inputsemrtags.txt', 'w') as file:
+    json.dump(input_emr_tags, file, indent=2)
  
-    if (not emr_tags_str_in_file or not any(emr_tags_in_file)) or (not tags or not any(tags)) or not found_sec_conf:
-        empty_value_found = True
-        break
+with open('airflowemrtags.txt', 'r') as file:
+    airflow_emr_tags_str = file.read()
  
-    for emr_tag in json.loads(emr_tags_str):
-        if not any(emr_tag.items() <= json.loads(tag) for tag in emr_tags_in_file):
-            emr_tags_not_found.append(emr_tag)
+try:
+    airflow_emr_tags = json.loads(airflow_emr_tags_str)
+except json.decoder.JSONDecodeError as e:
+    print(f"Error decoding JSON from airflowemrtags.txt: {e}")
+    airflow_emr_tags = []
+ 
+if input_emr_tags and set(input_emr_tags).difference(airflow_emr_tags):
+    emr_tags_not_found.extend(set(input_emr_tags).difference(airflow_emr_tags))
  
 if empty_value_found or emr_tags_not_found:
     if empty_value_found:
