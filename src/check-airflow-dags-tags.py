@@ -60,7 +60,12 @@ for dag_file in dag_files:
     combined_tags_str = ''.join(emr_tags_str_in_file)
     combined_tags_str = combined_tags_str.replace("'", "\"")
     print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")
-    emr_tags_in_file = json.loads(combined_tags_str) if combined_tags_str else []
+    try:
+        emr_tags_in_file = json.loads(combined_tags_str) if combined_tags_str else []
+    except json.decoder.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+        emr_tags_in_file = [] 
+    print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")    
     formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
  
