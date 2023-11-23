@@ -39,3 +39,13 @@ runs:
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        
       shell: bash
+    - name: Compare
+      run: |
+        if cmp -s airflowemrtags.txt inputsemrtags.txt; then
+          echo "EMR Tags are the same"
+        else
+          echo "EMR Tags are different"
+          echo "Missing EMR Tags in airflowemrtags.txt:"
+          comm -13 <(jq -c -S 'sort' inputsemrtags.txt) <(jq -c -S 'sort' airflowemrtags.txt)
+        fi
+      shell: bash

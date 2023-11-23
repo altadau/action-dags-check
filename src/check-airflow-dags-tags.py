@@ -18,15 +18,15 @@ def find_emr_tags_in_file(file_path):
         matches = tags_pattern.findall(content)
         return json.loads(matches[0]) if matches else []
  
-with open('inputsemrtags.txt', 'r') as file:
-    input_emr_tags_str = file.read()
-    print(f"Contents of inputsemrtags.txt: {input_emr_tags_str}")
+#with open('inputsemrtags.txt', 'r') as file:
+#    input_emr_tags_str = file.read()
+#    print(f"Contents of inputsemrtags.txt: {input_emr_tags_str}")
  
-try:
-    input_emr_tags = json.loads(input_emr_tags_str)
-except json.decoder.JSONDecodeError as e:
-    print(f"Error decoding JSON from inputsemrtags.txt: {e}")
-    input_emr_tags = []
+#try:
+#    input_emr_tags = json.loads(input_emr_tags_str)
+#except json.decoder.JSONDecodeError as e:
+#    print(f"Error decoding JSON from inputsemrtags.txt: {e}")
+#    input_emr_tags = []
  
 directory = os.environ.get('DIRECTORY', '')
 dag_files = find_dag_files(directory)
@@ -44,11 +44,11 @@ for dag_file in dag_files:
     print(f"EMR Tags in {dag_file} (raw): {emr_tags_in_file}")
     print(f"EMR Tags in {dag_file}: {json.dumps(emr_tags_in_file, indent=2)}")
  
-    if input_emr_tags and any(tag not in emr_tags_in_file for tag in input_emr_tags):
-        emr_tags_not_found.extend(tag for tag in input_emr_tags if tag not in emr_tags_in_file)
+#    if input_emr_tags and any(tag not in emr_tags_in_file for tag in input_emr_tags):
+#        emr_tags_not_found.extend(tag for tag in input_emr_tags if tag not in emr_tags_in_file)
  
-with open('inputsemrtags.txt', 'w') as file:
-    json.dump(input_emr_tags, file, indent=2)
+#with open('inputsemrtags.txt', 'w') as file:
+#    json.dump(input_emr_tags, file, indent=2)
  
 with open('airflowemrtags.txt', 'r') as file:
     airflow_emr_tags_str = file.read()
@@ -59,8 +59,8 @@ except json.decoder.JSONDecodeError as e:
     print(f"Error decoding JSON from airflowemrtags.txt: {e}")
     airflow_emr_tags = []
  
-if input_emr_tags and any(tag not in airflow_emr_tags for tag in input_emr_tags):
-    emr_tags_not_found.extend(tag for tag in input_emr_tags if tag not in airflow_emr_tags)
+#if input_emr_tags and any(tag not in airflow_emr_tags for tag in input_emr_tags):
+#    emr_tags_not_found.extend(tag for tag in input_emr_tags if tag not in airflow_emr_tags)
  
 if empty_value_found or emr_tags_not_found:
     if empty_value_found:
