@@ -19,7 +19,8 @@ def find_emr_tags_in_file(file_path):
  
 with open('inputsemrtags.txt', 'r') as file:
     input_emr_tags_str = file.read()
- 
+    print(f"Contents of inputsemrtags.txt: {input_emr_tags_str}")
+    
 try:
     input_emr_tags = json.loads(input_emr_tags_str)
 except json.decoder.JSONDecodeError as e:
