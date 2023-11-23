@@ -57,8 +57,8 @@ for dag_file in dag_files:
     emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags_str_in_file)
     combined_tags_str = combined_tags_str.replace("'", "\"")
-    print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")    
-    emr_tags_in_file = combined_tags_str if combined_tags_str else []
+    print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")
+    emr_tags_in_file = json.loads(combined_tags_str) if combined_tags_str else []
     print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")
     formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
@@ -73,7 +73,7 @@ for dag_file in dag_files:
         break
  
     for emr_tag in json.loads(emr_tags_str):
-        if emr_tag not in json.dumps(emr_tags_in_file):
+        if not any(emr_tag.items() <= json.loads(tag) for tag in emr_tags_in_file):
             emr_tags_not_found.append(emr_tag)
  
 if empty_value_found or emr_tags_not_found:
