@@ -73,7 +73,7 @@ for dag_file in dag_files:
         break
  
     for emr_tag in json.loads(emr_tags_str):
-        if emr_tag not in emr_tags_in_file:
+        if emr_tag not in json.dumps(emr_tags_in_file):
             emr_tags_not_found.append(emr_tag)
  
 if empty_value_found or emr_tags_not_found:
