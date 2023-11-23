@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import sys
  
 def find_dag_files(directory):
     dag_files = []
@@ -20,7 +21,7 @@ def find_emr_tags_in_file(file_path):
 with open('inputsemrtags.txt', 'r') as file:
     input_emr_tags_str = file.read()
     print(f"Contents of inputsemrtags.txt: {input_emr_tags_str}")
-    
+ 
 try:
     input_emr_tags = json.loads(input_emr_tags_str)
 except json.decoder.JSONDecodeError as e:
@@ -48,8 +49,8 @@ for dag_file in dag_files:
     formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
  
-    if input_emr_tags and set(input_emr_tags).difference(emr_tags_in_file):
-        emr_tags_not_found.extend(set(input_emr_tags).difference(emr_tags_in_file))
+    if input_emr_tags and any(tag not in emr_tags_in_file for tag in input_emr_tags):
+        emr_tags_not_found.extend(tag for tag in input_emr_tags if tag not in emr_tags_in_file)
  
 with open('inputsemrtags.txt', 'w') as file:
     json.dump(input_emr_tags, file, indent=2)
@@ -63,8 +64,8 @@ except json.decoder.JSONDecodeError as e:
     print(f"Error decoding JSON from airflowemrtags.txt: {e}")
     airflow_emr_tags = []
  
-if input_emr_tags and set(input_emr_tags).difference(airflow_emr_tags):
-    emr_tags_not_found.extend(set(input_emr_tags).difference(airflow_emr_tags))
+if input_emr_tags and any(tag not in airflow_emr_tags for tag in input_emr_tags):
+    emr_tags_not_found.extend(tag for tag in input_emr_tags if tag not in airflow_emr_tags)
  
 if empty_value_found or emr_tags_not_found:
     if empty_value_found:
@@ -73,4 +74,4 @@ if empty_value_found or emr_tags_not_found:
     if emr_tags_not_found:
         print(f"::error::EMR Tags not found in Airflow DAG files: {emr_tags_not_found}")
  
-    exit(1)
+    sys.exit(1)

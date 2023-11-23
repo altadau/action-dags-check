@@ -5,14 +5,14 @@ inputs:
     description: 'Specify path to Airflow DAG directory'
     required: true
     default: "orchestration/dags"
-  emr_tags:
-    description: 'List of required EMR Tags'
-    required: true
-    default: |
-      [
-        {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
-        {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
-      ]
+#  emr_tags:
+#    description: 'List of required EMR Tags'
+#    required: true
+#    default: |
+#      [
+#        {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
+#        {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
+#      ]
  
 author: 'Dauren Altayev'
 runs:
@@ -29,7 +29,12 @@ runs:
     - name: Pass Inputs to Shell
       run: |
         echo "DIRECTORY=${{ inputs.directory }}" >> $GITHUB_ENV
-        echo "${{ inputs.emr_tags }}" | jq . >> inputsemrtags.txt
+        cat <<EOF > inputsemrtags.txt
+        [
+          {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
+          {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
+        ]
+        EOF
       shell: bash    
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        
