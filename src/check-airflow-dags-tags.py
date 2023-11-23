@@ -56,7 +56,8 @@ if not dag_files:
     print(f"::error::No DAG files found in the specified directory: {directory}")
  
 for dag_file in dag_files:
-    emr_tags_in_file = find_emr_tags_in_file(dag_file)
+    emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
+    emr_tags_in_file = json.loads(emr_tags_str_in_file)
     formatted_emr_tags = json.dumps(emr_tags_in_file, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
  
@@ -65,7 +66,7 @@ for dag_file in dag_files:
  
     found_sec_conf = find_sec_conf_in_file(dag_file)
  
-    if (not emr_tags_in_file or not any(emr_tags_in_file)) or (not tags or not any(tags)) or not found_sec_conf:
+    if (not emr_tags_str_in_file or not any(emr_tags_in_file)) or (not tags or not any(tags)) or not found_sec_conf:
         empty_value_found = True
         break
  
