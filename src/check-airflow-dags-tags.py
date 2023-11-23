@@ -44,6 +44,8 @@ def find_sec_conf_in_file(file_path):
  
 directory = os.environ.get('DIRECTORY', '')
 emr_tags_str = os.environ.get('EMR_TAGS', '')
+print(f"EMR_TAGS content: {emr_tags_str}")
+emr_tags = json.loads(emr_tags_str) if emr_tags_str else []
  
 dag_files = find_dag_files(directory)
  
@@ -53,7 +55,7 @@ emr_tags_not_found = []
 if not dag_files:
     print(f"::error::No DAG files found in the specified directory: {directory}")
  
-for dag_file in dag_files:
+for dag_file in dag_files:      
     emr_tags_str_in_file = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags_str_in_file)
     combined_tags_str = combined_tags_str.replace("'", "\"")
