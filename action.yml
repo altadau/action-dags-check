@@ -31,7 +31,7 @@ runs:
     - name: Pass Inputs to Shell
       run: |
         echo "DIRECTORY=${{ inputs.directory }}" >> $GITHUB_ENV
-        echo 'export EMR_TAGS='$(echo $EMR_TAGS) > inputsemrtags.txt
+        echo $EMR_TAGS > inputsemrtags.txt
       shell: bash            
     - name: Run script
       run: python ${{ github.action_path }}/src/check-airflow-dags-tags.py        
