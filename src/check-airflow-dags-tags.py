@@ -52,6 +52,9 @@ input_emr_tags = [
     {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
     {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
 ]
+
+formatted_input_json = json.dumps(input_emr_tags, separators=(',', ': '), indent=4)
+print(f"Formatted Input EMR Tags: {formatted_input_json}")
  
 for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)
