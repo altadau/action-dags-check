@@ -59,14 +59,19 @@ print(f"Formatted Input EMR Tags: {formatted_input_json}")
 for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags)
-    combined_tags_str = combined_tags_str.replace("'", "\"")    
+#    combined_tags_str = combined_tags_str.replace("'", "\"")    
+    combined_tags_str = "[{}]".format(combined_tags_str.replace("'", "\""))
     print(f"EMR Tags in {dag_file}: {combined_tags_str}")
 
     #json_like_chars = re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str)
     json_like_chars = "[{}]".format(re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str))
     json_objects = re.findall(r'{[^{}]*}', json_like_chars)
     print(f"Cleaned JSON-like string: {json_like_chars}")
+    if json_like_chars != formatted_input_json:
+        print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
     print(f"Separate JSON objects: {json_objects}")
+    if json_objects != formatted_input_json:
+        print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")    
     decoded_json_objects = []
     for obj in json_objects:
         try:
