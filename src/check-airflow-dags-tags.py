@@ -55,10 +55,10 @@ for dag_file in dag_files:
     combined_tags_str = ''.join(emr_tags)
     combined_tags_str = combined_tags_str.replace("'", "\"")
     print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")
-    emr_tags_in_file = combined_tags_str if combined_tags_str else []
-    print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")
+#    emr_tags_in_file = combined_tags_str if combined_tags_str else []
+#    print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")
 
-    print(f"EMR Tags in {dag_file}: {json.dumps(emr_tags, indent=2)}")
+#    print(f"EMR Tags in {dag_file}: {json.dumps(emr_tags, indent=2)}")
  
     tags = find_tags_in_file(dag_file)
     print(f"Tags in {dag_file}: {tags}")
