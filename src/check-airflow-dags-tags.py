@@ -60,8 +60,13 @@ for dag_file in dag_files:
 #    combined_tags_str = re.sub(r'\s+', '', combined_tags_str)
     print(f"EMR Tags in {dag_file}: {combined_tags_str}")
 
-#    json_like_chars = re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str)
-#    print(f"Cleaned JSON-like string: {json_like_chars}")
+    json_like_chars = re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str)
+    print(f"Cleaned JSON-like string: {json_like_chars}")
+    try:
+        combined_tags = json.loads(json_like_chars)
+        print(f"Decoded JSON: {combined_tags}")
+    except json.decoder.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
 
 #    emr_tags = find_emr_tags_in_file(dag_file)
 #    combined_tags_str = ''.join(emr_tags)     
