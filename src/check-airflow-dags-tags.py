@@ -81,7 +81,8 @@ for dag_file in dag_files:
 #    print(f"EMR Tags in {dag_file}:\n{combined_tags_str_formatted}")
  
 #    if emr_tags != input_emr_tags:
-    if decoded_json_objects != input_emr_tags:
+#    if decoded_json_objects != input_emr_tags:
+    if not any(decoded_obj == input_emr_tags for decoded_obj in decoded_json_objects):
         print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
         exit(1)
  
