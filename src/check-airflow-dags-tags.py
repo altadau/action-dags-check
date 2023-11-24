@@ -61,12 +61,17 @@ for dag_file in dag_files:
     print(f"EMR Tags in {dag_file}: {combined_tags_str}")
 
     json_like_chars = re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str)
+    json_objects = re.findall(r'{[^{}]*}', json_like_chars)
     print(f"Cleaned JSON-like string: {json_like_chars}")
-    try:
-        combined_tags = json.loads(json_like_chars)
-        print(f"Decoded JSON: {combined_tags}")
-    except json.decoder.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
+    print(f"Separate JSON objects: {json_objects}")
+    decoded_json_objects = []
+    for obj in json_objects:
+        try:
+            decoded_obj = json.loads(obj)
+            decoded_json_objects.append(decoded_obj)
+        except json.decoder.JSONDecodeError as e:
+            print(f"Error decoding JSON object: {e}")
+    print(f"Decoded JSON objects: {decoded_json_objects}")        
 
 #    emr_tags = find_emr_tags_in_file(dag_file)
 #    combined_tags_str = ''.join(emr_tags)     
@@ -76,7 +81,7 @@ for dag_file in dag_files:
 #    print(f"EMR Tags in {dag_file}:\n{combined_tags_str_formatted}")
  
 #    if emr_tags != input_emr_tags:
-    if combined_tags_str != input_emr_tags:
+    if decoded_json_objects != input_emr_tags:
         print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
         exit(1)
  
