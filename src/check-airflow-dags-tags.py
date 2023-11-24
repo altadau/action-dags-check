@@ -45,20 +45,22 @@ def find_sec_conf_in_file(file_path):
 dag_directory = os.environ.get('DIRECTORY', '')
 dag_files = find_dag_files(dag_directory)
  
-
 found_values = []
  
+input_emr_tags = [
+    {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
+    {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
+]
+ 
 for dag_file in dag_files:
-    emr_tags = find_emr_tags_in_file(dag_file)    
-    formatted_emr_tags = json.dumps(emr_tags, indent=2, ensure_ascii=False)
-
+    emr_tags = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags)
     combined_tags_str = combined_tags_str.replace("'", "\"")
-    print(f"EMR Tags in {dag_file} (raw): {combined_tags_str}")
-#    emr_tags_in_file = combined_tags_str if combined_tags_str else []
-#    print(f"EMR Tags in {dag_file}: {emr_tags_in_file}")
-
-#    print(f"EMR Tags in {dag_file}: {json.dumps(emr_tags, indent=2)}")
+    print(f"EMR Tags in {dag_file}: {combined_tags_str}")
+ 
+    if emr_tags != input_emr_tags:
+        print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
+        exit(1)
  
     tags = find_tags_in_file(dag_file)
     print(f"Tags in {dag_file}: {tags}")
