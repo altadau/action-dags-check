@@ -1,6 +1,7 @@
 import os
 import re
 import json
+
  
 def find_dag_files(directory):
     dag_files = []
@@ -48,52 +49,30 @@ dag_files = find_dag_files(dag_directory)
 found_values = []
  
 input_emr_tags = [ 
-#    {"Key":"ssmmanaged","Value":"noseeCSRC_DBC_933_EC2_SSM_MANAGED"},{"Key":"CSRC_DBC_933","Value":"CSRC_DBC_933_EC2_SSM_MANAGED"}
     {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
     {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
 ]
 
 formatted_input_json = json.dumps(input_emr_tags, separators=(',', ': '), indent=4)
-print(f"Formatted Input EMR Tags: {formatted_input_json}")
+print(f"Required EMR Tags: {formatted_input_json}")
+
+emr_tags_data = {}
  
 for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags)
-#    combined_tags_str = combined_tags_str.replace("'", "\"")    
     combined_tags_str = "[{}]".format(combined_tags_str.replace("'", "\""))
     print(f"EMR Tags in {dag_file}: {combined_tags_str}")
 
-    #json_like_chars = re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str)
-    json_like_chars = "[{}]".format(re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str))
-    json_objects = re.findall(r'{[^{}]*}', json_like_chars)
-    print(f"Cleaned JSON-like string: {json_like_chars}")
-    if json_like_chars != formatted_input_json:
-        print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
-    print(f"Separate JSON objects: {json_objects}")
-    if json_objects != formatted_input_json:
-        print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")    
-    decoded_json_objects = []
-    for obj in json_objects:
-        try:
-            decoded_obj = json.loads(obj)
-            decoded_json_objects.append(decoded_obj)
-        except json.decoder.JSONDecodeError as e:
-            print(f"Error decoding JSON object: {e}")
-    print(f"Decoded JSON objects: {decoded_json_objects}")        
+    list_var1 = json.loads(formatted_input_json)
+    list_var2 = json.loads(combined_tags_str)
 
-#    emr_tags = find_emr_tags_in_file(dag_file)
-#    combined_tags_str = ''.join(emr_tags)     
-#    combined_tags_str = combined_tags_str.replace("'", "\"")     
-#    combined_tags = json.loads(combined_tags_str)     
-#    combined_tags_str_formatted = json.dumps(combined_tags, indent=2)     
-#    print(f"EMR Tags in {dag_file}:\n{combined_tags_str_formatted}")
- 
-#    if emr_tags != input_emr_tags:
-#    if decoded_json_objects != input_emr_tags:
-#    if not any(decoded_obj == input_emr_tags for decoded_obj in decoded_json_objects):
-    if combined_tags_str != formatted_input_json:
-        print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
+    if all(item in list_var2 for item in list_var1):
+        print("Required tags found")
+    else:
+        print("Required tags not found")
         exit(1)
+
  
     tags = find_tags_in_file(dag_file)
     print(f"Tags in {dag_file}: {tags}")
