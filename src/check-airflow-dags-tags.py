@@ -56,6 +56,7 @@ for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags)
     combined_tags_str = combined_tags_str.replace("'", "\"")
+    combined_tags_str = re.sub(r'\s+', '', combined_tags_str)
     print(f"EMR Tags in {dag_file}: {combined_tags_str}")
  
     if emr_tags != input_emr_tags:
