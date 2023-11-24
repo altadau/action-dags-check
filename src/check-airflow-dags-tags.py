@@ -60,7 +60,7 @@ for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags)
     combined_tags_str = combined_tags_str.replace("'", "\"")
-#    combined_tags_str = re.sub(r'\s+', '', combined_tags_str)
+    combined_tags_str = json.dumps(combined_tags_str, separators=(',', ': '), indent=4)
     print(f"EMR Tags in {dag_file}: {combined_tags_str}")
 
     json_like_chars = re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str)
@@ -85,7 +85,8 @@ for dag_file in dag_files:
  
 #    if emr_tags != input_emr_tags:
 #    if decoded_json_objects != input_emr_tags:
-    if not any(decoded_obj == input_emr_tags for decoded_obj in decoded_json_objects):
+#    if not any(decoded_obj == input_emr_tags for decoded_obj in decoded_json_objects):
+    if combined_tags_str != formatted_input_json:
         print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
         exit(1)
  
