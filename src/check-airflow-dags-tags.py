@@ -48,17 +48,20 @@ dag_files = find_dag_files(dag_directory)
 found_values = []
  
 input_emr_tags = [ 
-    {"Key":"ssmmanaged","Value":"noseeCSRC_DBC_933_EC2_SSM_MANAGED"},{"Key":"CSRC_DBC_933","Value":"CSRC_DBC_933_EC2_SSM_MANAGED"}
-#    {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
-#    {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
+#    {"Key":"ssmmanaged","Value":"noseeCSRC_DBC_933_EC2_SSM_MANAGED"},{"Key":"CSRC_DBC_933","Value":"CSRC_DBC_933_EC2_SSM_MANAGED"}
+    {"Key": "ssmmanaged", "Value": "no see CSRC_DBC_933_EC2_SSM_MANAGED"},
+    {"Key": "CSRC_DBC_933", "Value": "CSRC_DBC_933_EC2_SSM_MANAGED"}
 ]
  
 for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)
     combined_tags_str = ''.join(emr_tags)
     combined_tags_str = combined_tags_str.replace("'", "\"")
-    combined_tags_str = re.sub(r'\s+', '', combined_tags_str)
+#    combined_tags_str = re.sub(r'\s+', '', combined_tags_str)
     print(f"EMR Tags in {dag_file}: {combined_tags_str}")
+
+#    json_like_chars = re.sub(r'[^{}[\],:\w\d"\'-]', '', combined_tags_str)
+#    print(f"Cleaned JSON-like string: {json_like_chars}")
 
 #    emr_tags = find_emr_tags_in_file(dag_file)
 #    combined_tags_str = ''.join(emr_tags)     
@@ -67,7 +70,8 @@ for dag_file in dag_files:
 #    combined_tags_str_formatted = json.dumps(combined_tags, indent=2)     
 #    print(f"EMR Tags in {dag_file}:\n{combined_tags_str_formatted}")
  
-    if emr_tags != input_emr_tags:
+#    if emr_tags != input_emr_tags:
+    if combined_tags_str != input_emr_tags:
         print(f"::error::EMR Tags in {dag_file} do not match the input EMR tags.")
         exit(1)
  
