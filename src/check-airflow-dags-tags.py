@@ -52,6 +52,8 @@ for dag_file in dag_files:
     emr_tags = find_emr_tags_in_file(dag_file)    
     formatted_emr_tags = json.dumps(emr_tags, indent=2, ensure_ascii=False)
     print(f"EMR Tags in {dag_file}:\n{formatted_emr_tags}")
+    print(f"EMR Tags in {dag_file} (raw): {emr_tags}")
+    print(f"EMR Tags in {dag_file}: {json.dumps(emr_tags, indent=2)}")
  
     tags = find_tags_in_file(dag_file)
     print(f"Tags in {dag_file}: {tags}")
